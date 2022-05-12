@@ -322,6 +322,8 @@ static Button buttons[] = {
 	{ ClkTagBar,     MODKEY,    Button1,     tag,            {0} },
 	{ ClkTagBar,     MODKEY,    Button3,     toggletag,      {0} },
 	{ ClkTabBar,     0,         Button1,     focuswin,       {0} },
-  { ClkTagBar,     0,         Button4,     view_adjacent,  { .i = -1 } },
-	{ ClkTagBar,     0,         Button5,     view_adjacent,  { .i = +1 } },
+  { ClkTagBar,     ShiftMask, Button4,     view_adjacent,  { .i = -1 } },
+	{ ClkTagBar,     ShiftMask, Button5,     view_adjacent,  { .i = +1 } },
+  { ClkTagBar,     0,         Button4,     shiftviewclients, { .i = +1 } },
+	{ ClkTagBar,     0,         Button5,     shiftviewclients, { .i = -1 } },
 };
