@@ -1,7 +1,7 @@
-/* See LICENSE file for copyright and license details. */
+/* See LICENSE file for copyRight and license details. */
 
-#define XF86MonBrightnessDown 0x1008ff03
-#define XF86MonBrightnessUp 0x1008ff02
+#define XF86MonBRightnessDown 0x1008ff03
+#define XF86MonBRightnessUp 0x1008ff02
 #define TERMINAL "st"
 #define TERMCLASS "St"
 
@@ -18,12 +18,12 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int user_bh            = 0;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 
-/*  Display modes of the tab bar: never shown, always shown, shown only in  */
+/*  Display modes of the Tab bar: never shown, always shown, shown only in  */
 /*  monocle mode in the presence of several windows.                        */
 /*  Modes after showtab_nmodes are disabled.                                */
 enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
-static const int showtab			= showtab_auto;        /* Default tab bar show mode */
-static const int toptab				= False;               /* False means bottom tab bar */
+static const int showtab			= showtab_auto;        /* Default Tab bar show mode */
+static const int toptab				= False;               /* False means bottom Tab bar */
 
 static const char *fonts[]        = { "Iosevka Nerd Font:style:medium:size=15",
                                       "JoyPixels:size=13:antialias=true:autohint=true", 
@@ -39,6 +39,19 @@ static const char *colors[][3]    = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray1 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_red  },
+};
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"st", "-n", "spterm", "-g", "100x25", NULL };
+const char *spcmd2[] = {"st", "-n", "spfm", "-g", "100x25", "-e", "lfub", NULL };
+const char *spcmd3[] = {"keepassxc", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm",      spcmd1},
+	{"spfm",        spcmd2},
+	{"keepassxc",   spcmd3},
 };
 
 /* tagging */
@@ -68,7 +81,11 @@ static const Rule rules[] = {
   	{ "audacious",          NULL,       NULL,       0,            1,           0,           0,           0,         -1 },
   	{ "Dragon",             NULL,       NULL,       0,            1,           1,           0,           0,         -1 },
   	{ "firefox",            NULL,       NULL,       0,            1,           0,           0,           0,         -1 },
-  	{ NULL,                 NULL,  "Event Tester",  0,            0,           0,           0,           1,         -1 }, /* xev */
+    
+  	{ NULL,		              "spterm",		NULL,	    	SPTAG(0),		 1,            1,			      0,           0,         -1 },
+  	{ NULL,		              "spfm",	  	NULL,	    	SPTAG(1),		 1,            1,			      0,           0,         -1 },
+  	{ NULL,		              "keepassxc",NULL,	    	SPTAG(2),		 1,            1,			      0,           0,         -1 },
+  	{ NULL,                 NULL,  "Event Tester",  0,           0,            0,           0,           1,         -1 }, /* xev */
     /* floatthings */
     { "float-st",           NULL,       NULL,       0,            1,           1,           0,           0,         -1 },
     { "float-st-lfub",      NULL,       NULL,       0,            1,           1,           0,           0,         -1 },
@@ -138,12 +155,12 @@ static Key keys[] = {
 	{ MODKEY,			XK_F9,		spawn,		SHCMD("dmenumount") },
 	{ MODKEY,			XK_F10,		spawn,		SHCMD("dmenuumount") },
 	{ MODKEY,			XK_F11,		spawn,		SHCMD("mpv --untimed --no-cache --no-osc --no-input-default-bindings --profile=low-latency --input-conf=/dev/null --title=webcam $(ls /dev/video[0,2,4,6,8] | tail -n 1)") },
-  /* volume and brightness */
+  /* volume and bRightness */
   { 0,  XF86XK_AudioMute,           spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+1 dwmblocks") },
   { 0,  XF86XK_AudioRaiseVolume,    spawn, SHCMD("pamixer -i 5; pkill -RTMIN+1 dwmblocks") },
   { 0,  XF86XK_AudioLowerVolume,    spawn, SHCMD("pamixer -d 5; pkill -RTMIN+1 dwmblocks") },
-  { 0,  XF86MonBrightnessUp,        spawn, SHCMD("light -A 5; pkill -RTMIN+2 dwmblocks") },
-  { 0,  XF86MonBrightnessDown,      spawn, SHCMD("light -U 5; pkill -RTMIN+2 dwmblocks") },
+  { 0,  XF86MonBRightnessUp,        spawn, SHCMD("light -A 5; pkill -RTMIN+2 dwmblocks") },
+  { 0,  XF86MonBRightnessDown,      spawn, SHCMD("light -U 5; pkill -RTMIN+2 dwmblocks") },
 	{ MODKEY,			          XK_equal,	spawn, SHCMD("pamixer -i 5; pkill -RTMIN+1 dwmblocks") },
 	{ MODKEY,			          XK_minus,	spawn, SHCMD("pamixer -d 5; pkill -RTMIN+1 dwmblocks") },
   { MODKEY,		            XK_0,   	spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; pkill -RTMIN+1 dwmblocks") },
@@ -174,8 +191,8 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,		XK_m,   	        spawn,	  SHCMD("dmenumount") },
 	{ MODKEY|ControlMask|ShiftMask,	  XK_m,   spawn,	  SHCMD("dmenuumount") },
   /* floatthings */
-  { MODKEY|ShiftMask,    XK_Return,      spawn,    SHCMD("st -c float-st -g 100x25+350+200") },
-  { MODKEY,              XK_e,           spawn,    SHCMD("st -c float-st-lfub -g 100x25+350+200 lfub") },
+  /* { MODKEY|ShiftMask,    XK_Return,      spawn,    SHCMD("st -c float-st -g 100x25+350+200") }, */
+  /* { MODKEY,              XK_e,           spawn,    SHCMD("st -c float-st-lfub -g 100x25+350+200 lfub") }, */
   { MODKEY|ShiftMask,    XK_c,           spawn,    SHCMD("st -c float-st-calcurse -g 100x25+350+200 calcurse") },
   { MODKEY,              XK_apostrophe,  spawn,    SHCMD("st -c float-st-calc -g 50x20+660+275 bc -lq") },
   { MODKEY|ShiftMask,    XK_m,           spawn,    SHCMD("st -c float-st-ncmpcpp -g 100x25+350+200 ncmpcpp") },
@@ -184,7 +201,6 @@ static Key keys[] = {
   { MODKEY|ShiftMask,    XK_Delete,      spawn,    SHCMD("st -c float-st-gotop -g 100x25+350+200 gotop") },
   { MODKEY|ShiftMask,    XK_r,           spawn,    SHCMD("st -c float-st-gotop -g 100x25+350+200 gotop") },
   /* screenshots */
-	/* { 0,			     	XK_Print,	spawn,		SHCMD("maim pic-full-$(date '+%y%m%d-%H%M-%S').png") }, */
 	{ 0,			     	XK_Print,	spawn,		SHCMD("ss-full") },
 	{ ShiftMask,	  XK_Print,	spawn,		SHCMD("maimpick") },
 	{ ControlMask,  XK_Print,	spawn,		SHCMD("ss-cp") },
@@ -198,7 +214,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_w,      tabmode,        {-1} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-  { ALTKEY,                       XK_Tab,    swapfocus,      {0} }, 
+  { MODKEY,                       XK_Tab,    swapfocus,      {0} }, 
 	{ MODKEY,                       XK_n,      incnmaster,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_n,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
@@ -220,10 +236,10 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           XK_Down,   moveresizeedge, {.v = "b"} },
 	{ MODKEY|ControlMask,           XK_Left,   moveresizeedge, {.v = "l"} },
 	{ MODKEY|ControlMask,           XK_Right,  moveresizeedge, {.v = "r"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Up,     moveresizeedge, {.v = "T"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Down,   moveresizeedge, {.v = "B"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Left,   moveresizeedge, {.v = "L"} },
-	{ MODKEY|ControlMask|ShiftMask, XK_Right,  moveresizeedge, {.v = "R"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Up,     moveresizeedge, {.v = "t"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Down,   moveresizeedge, {.v = "b"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Left,   moveresizeedge, {.v = "l"} },
+	{ MODKEY|ControlMask|ShiftMask, XK_Right,  moveresizeedge, {.v = "r"} },
 	{ MODKEY,                       XK_space,  zoom,           {0} },
 	{ MODKEY,                       XK_x,      togglegaps,     {0} },
 	{ MODKEY|ShiftMask,             XK_x,      defaultgaps,    {0} },
@@ -235,11 +251,11 @@ static Key keys[] = {
 	{ MODKEY|ControlMask|ShiftMask, XK_o,      incrogaps,      {.i = -3 } },
 	{ MODKEY|ALTKEY,                XK_6,      incrihgaps,     {.i = +3 } },
 	{ MODKEY|ALTKEY|ShiftMask,      XK_6,      incrihgaps,     {.i = -3 } },
-	{ MODKEY|ALTKEY,                XK_7,      incrivgaps,     {.i = +3 } },
+	{ MODKEY|ALTKEY,               XK_7,      incrivgaps,     {.i = +3 } },
 	{ MODKEY|ALTKEY|ShiftMask,      XK_7,      incrivgaps,     {.i = -3 } },
-	{ MODKEY|ALTKEY,                XK_8,      incrohgaps,     {.i = +3 } },
+	{ MODKEY|ALTKEY,               XK_8,      incrohgaps,     {.i = +3 } },
 	{ MODKEY|ALTKEY|ShiftMask,      XK_8,      incrohgaps,     {.i = -3 } },
-	{ MODKEY|ALTKEY,                XK_9,      incrovgaps,     {.i = +3 } },
+	{ MODKEY|ALTKEY,               XK_9,      incrovgaps,     {.i = +3 } },
 	{ MODKEY|ALTKEY|ShiftMask,      XK_9,      incrovgaps,     {.i = -3 } },
   { MODKEY|ControlMask,           XK_l,      view_adjacent,  { .i = +1 } },
 	{ MODKEY|ControlMask,           XK_h,      view_adjacent,  { .i = -1 } },
@@ -273,6 +289,10 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,   XK_c, 		 setborderpx,  {.i = +1 } },
 	{ MODKEY|ControlMask,   XK_x, 		 setborderpx,  {.i = -1 } },
 	{ MODKEY|ControlMask,   XK_z,      setborderpx,  {.i = 0 } },
+  { MODKEY|ShiftMask,  		XK_Return, togglescratch,  {.ui = 0 } },
+	{ MODKEY,          			XK_e,	   togglescratch,  {.ui = 1 } },
+	{ MODKEY|ShiftMask,  		XK_p,	   togglescratch,  {.ui = 2 } },
+
 	TAGKEYS(                XK_1,                      0)
 	TAGKEYS(                XK_2,                      1)
 	TAGKEYS(                XK_3,                      2)
@@ -305,7 +325,7 @@ static Button buttons[] = {
 	 *    2 - mouse pointer warps to window center
 	 *
 	 * The moveorplace uses movemouse or placemouse depending on the floating state
-	 * of the selected client. Set up individual keybindings for the two if you want
+	 * of the selected client. Set Up individual keybindings for the two if you want
 	 * to control these separately (i.e. to retain the feature to move a tiled window
 	 * into a floating position).
 	 */
