@@ -356,8 +356,10 @@ static Button buttons[] = {
 	{ ClkTagBar,     ShiftMask, Button5,     view_adjacent,  { .i = +1 } },
 	{ ClkTagBar,		0,		Button4,	shiftview,	{.i = -1} },
 	{ ClkTagBar,		0,		Button5,	shiftview,	{.i = 1} },
-
  	{ ClkClientWin,		MODKEY,		Button4,	incrgaps,	{.i = +3} },
 	{ ClkClientWin,		MODKEY,		Button5,	incrgaps,	{.i = -3} },
+ 	{ ClkClientWin,		MODKEY|ControlMask,		Button4,	setborderpx,  {.i = +1 } },
+	{ ClkClientWin,		MODKEY|ControlMask,		Button5,	setborderpx,  {.i = -1 } },
+
 
 };
