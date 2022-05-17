@@ -161,6 +161,7 @@ static const char *termcmd[]  = { "st", NULL };
 #include <X11/XF86keysym.h>
 #include "movestack.c"
 #include "nextprevtag.c"
+#include "shiftview.c"
 static Key keys[] = {
 	/* modifier                     key        function        argument */
   /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^agstr^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
@@ -268,8 +269,8 @@ static Key keys[] = {
 	{ MODKEY|ALTKEY|ShiftMask,      XK_9,      incrovgaps,     {.i = -3 } },
   { MODKEY|ControlMask,           XK_l,      view_adjacent,  { .i = +1 } },
 	{ MODKEY|ControlMask,           XK_h,      view_adjacent,  { .i = -1 } },
-	{ MODKEY,                       XK_o,      shiftviewclients, { .i = +1 } },
-	{ MODKEY,                       XK_i,      shiftviewclients, { .i = -1 } },
+	{ MODKEY,			XK_i,		shiftview,	{ .i = -1 } },
+	{ MODKEY,			XK_o,	  shiftview,	{ .i = 1 } },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ControlMask,		XK_comma,  cyclelayout,    {.i = -1 } },
@@ -353,6 +354,10 @@ static Button buttons[] = {
 	{ ClkTabBar,     0,         Button1,     focuswin,       {0} },
   { ClkTagBar,     ShiftMask, Button4,     view_adjacent,  { .i = -1 } },
 	{ ClkTagBar,     ShiftMask, Button5,     view_adjacent,  { .i = +1 } },
-  { ClkTagBar,     0,         Button4,     shiftviewclients, { .i = +1 } },
-	{ ClkTagBar,     0,         Button5,     shiftviewclients, { .i = -1 } },
+	{ ClkTagBar,		0,		Button4,	shiftview,	{.i = -1} },
+	{ ClkTagBar,		0,		Button5,	shiftview,	{.i = 1} },
+
+ 	{ ClkClientWin,		MODKEY,		Button4,	incrgaps,	{.i = +3} },
+	{ ClkClientWin,		MODKEY,		Button5,	incrgaps,	{.i = -3} },
+
 };
